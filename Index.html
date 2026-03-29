@@ -2,167 +2,277 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Shweta Magazine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOGUE: Shweta Special Edition 💖</title>
 
 <style>
-body {
-    margin: 0;
-    background: #111;
-    font-family: 'Georgia', serif;
-}
+    /* --- FONTS & BASICS --- */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap');
 
-.book {
-    width: 350px;
-    height: 500px;
-    position: relative;
-    margin: 30px auto;
-    perspective: 1500px;
-}
+    body {
+        margin: 0;
+        background: radial-gradient(circle, #1a1a1a, #000);
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+    }
 
-.page {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: white;
-    border-radius: 10px;
-    transform-origin: left;
-    transition: transform 1s;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    overflow: hidden;
-    padding: 20px;
-}
+    /* --- MUSIC BUTTON --- */
+    #music-control {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(45deg, #ff3385, #ff85a1);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(255, 51, 133, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+    }
+    #music-control:hover { transform: scale(1.1); }
 
-.page img {
-    width: 100%;
-    border-radius: 10px;
-}
+    /* --- THE BOOK CONTAINER --- */
+    .book {
+        width: 380px;
+        height: 550px;
+        position: relative;
+        perspective: 1500px;
+    }
 
-.page h1, .page h2 {
-    margin: 10px 0;
-}
+    .page {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: #fff;
+        border-radius: 0 15px 15px 0;
+        transform-origin: left;
+        transform-style: preserve-3d;
+        transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        box-shadow: 0 0 25px rgba(0,0,0,0.6);
+        overflow: hidden;
+    }
 
-.quote {
-    font-style: italic;
-    color: #ff3385;
-}
+    /* Spine Shadow */
+    .page::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; width: 40px; height: 100%;
+        background: linear-gradient(to right, rgba(0,0,0,0.15), transparent);
+        z-index: 5;
+    }
 
-input {
-    display: none;
-}
+    .content {
+        padding: 25px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        box-sizing: border-box;
+    }
 
-/* Flip effect */
-#page1:checked ~ .p1 { transform: rotateY(-180deg); }
-#page2:checked ~ .p2 { transform: rotateY(-180deg); }
-#page3:checked ~ .p3 { transform: rotateY(-180deg); }
-#page4:checked ~ .p4 { transform: rotateY(-180deg); }
-#page5:checked ~ .p5 { transform: rotateY(-180deg); }
+    /* --- STICKERS --- */
+    .sticker {
+        position: absolute;
+        font-size: 30px;
+        z-index: 10;
+        animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(10deg); }
+    }
 
-label {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
+    /* --- IMAGE STYLING --- */
+    .page img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        border: 6px solid white;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        margin-bottom: 15px;
+    }
 
-/* Vogue Cover */
-.cover {
-    background: black;
-    color: white;
-    text-align: center;
-}
+    /* --- VOGUE COVER --- */
+    .cover { background: #000; color: white; }
+    .vogue-title { font-family: 'Playfair Display', serif; font-size: 75px; letter-spacing: -5px; line-height: 0.8; }
+    .sub-tag {
+        background: #e91e63;
+        color: white;
+        padding: 5px 15px;
+        font-size: 11px;
+        border-radius: 20px;
+        margin-top: -25px;
+        display: inline-block;
+        position: relative;
+        z-index: 11;
+    }
 
-.cover img {
-    width: 100%;
-    height: 70%;
-    object-fit: cover;
-}
+    /* --- FLIP LOGIC --- */
+    input { display: none; }
+    .p1 { z-index: 7; } .p2 { z-index: 6; } .p3 { z-index: 5; }
+    .p4 { z-index: 4; } .p5 { z-index: 3; } .p6 { z-index: 2; }
 
-.vogue-title {
-    font-size: 40px;
-    font-weight: bold;
-    letter-spacing: 3px;
-}
+    #p1:checked ~ .p1 { transform: rotateY(-180deg); z-index: 1; }
+    #p2:checked ~ .p2 { transform: rotateY(-180deg); z-index: 2; }
+    #p3:checked ~ .p3 { transform: rotateY(-180deg); z-index: 3; }
+    #p4:checked ~ .p4 { transform: rotateY(-180deg); z-index: 4; }
+    #p5:checked ~ .p5 { transform: rotateY(-180deg); z-index: 5; }
+    #p6:checked ~ .p6 { transform: rotateY(-180deg); z-index: 6; }
 
-.sub {
-    font-size: 18px;
-    margin-top: 5px;
-}
+    label { position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 100; }
+
+    /* --- TEXT STYLE --- */
+    .quote { font-family: 'Dancing Script', cursive; color: #e91e63; font-size: 1.4rem; }
+    h2 { font-family: 'Playfair Display', serif; text-transform: uppercase; margin: 10px 0; }
+    .joke-box { background: #fff0f5; padding: 12px; border-radius: 10px; font-size: 13px; border-left: 4px solid #e91e63; text-align: left; }
+
+    /* --- CONFETTI --- */
+    #canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 999; }
 </style>
 </head>
-
 <body>
 
+<canvas id="canvas"></canvas>
+
+<audio id="bgMusic" loop>
+    <source src="Manchala Hasee Toh Phasee 128 Kbps.mp3" type="audio/mpeg">
+</audio>
+
+<button id="music-control" onclick="toggleMusic()">
+    <span id="music-icon">🎵</span> <span id="music-text">Play Manchala</span>
+</button>
+
 <div class="book">
+    <input type="checkbox" id="p1">
+    <input type="checkbox" id="p2">
+    <input type="checkbox" id="p3">
+    <input type="checkbox" id="p4">
+    <input type="checkbox" id="p5">
+    <input type="checkbox" id="p6">
 
-<input type="checkbox" id="page1">
-<input type="checkbox" id="page2">
-<input type="checkbox" id="page3">
-<input type="checkbox" id="page4">
-<input type="checkbox" id="page5">
+    <div class="page p1 cover">
+        <label for="p1"></label>
+        <div class="content">
+            <div class="vogue-title">VOGUE</div>
+            <img src="MVIMG_20260318,085241.jpg" style="border:none; height:60%;">
+            <center><div class="sub-tag">The Manchala Edition 🐒</div></center>
+            <h2 style="color: white; font-size: 30px;">Shweta 💖</h2>
+            <p style="letter-spacing: 3px; font-size: 10px;">AKDUU BANDRIYA SPECIAL</p>
+        </div>
+    </div>
 
-<!-- Cover Page (Vogue Style) -->
-<div class="page p1 cover">
-    <label for="page1"></label>
-    <div class="vogue-title">VOGUE</div>
-    <img src="MVIMG_20260318,085241.jpg">
-    <h2>Shweta 💖</h2>
-    <p class="sub">Akduu Bandriya Edition 😌🔥</p>
+    <div class="page p2">
+        <label for="p2"></label>
+        <span class="sticker" style="top:20px; right:20px;">✨</span>
+        <div class="content">
+            <h2>Our Story 😂</h2>
+            <img src="IMG-20260310-WA0121.jpg">
+            <p class="quote">"From random talks to endless fights..."</p>
+            <p style="font-size: 12px;">You are the most annoying best friend I've ever had, and I wouldn't change a thing.</p>
+        </div>
+    </div>
+
+    <div class="page p3">
+        <label for="p3"></label>
+        <span class="sticker" style="bottom:40px; right:20px;">🐒</span>
+        <div class="content">
+            <h2>Tom & Jerry 🐱🐭</h2>
+            <img src="IMG-20260310-WA0136.jpg">
+            <div class="joke-box">
+                <b>The Secret:</b><br>
+                She looks innocent, but she has the roasting skills of a professional comedian. 😂
+            </div>
+        </div>
+    </div>
+
+    <div class="page p4">
+        <label for="p4"></label>
+        <span class="sticker" style="top:50%; right:10px;">💖</span>
+        <div class="content">
+            <h2>Why You? 🔥</h2>
+            <img src="IMG-20260311-WA0075.jpg">
+            <p style="font-size: 14px;"><b>Status:</b> Full-time Akduu.<br><b>Talent:</b> Making me laugh when I'm mad.</p>
+            <p class="quote">"One in a billion."</p>
+        </div>
+    </div>
+
+    <div class="page p5">
+        <label for="p5"></label>
+        <div class="content">
+            <h2>The Interview 🎤</h2>
+            <div class="joke-box" style="line-height: 1.6;">
+                <b>Fav Person?</b> The one making this magazine.<br>
+                <b>Goal?</b> To rule the world (and eat pizza).<br>
+                <b>Attitude?</b> 100% Manchala vibes.
+            </div>
+            <p class="quote" style="margin-top:20px;">"Never stop being you."</p>
+        </div>
+    </div>
+
+    <div class="page p6">
+        <label for="p6"></label>
+        <div class="content">
+            <h2>Confessions 💌</h2>
+            <img src="Snapchat-1029023790.jpg">
+            <p class="quote">"You’re my comfort person."</p>
+            <p style="font-size: 12px;">Thanks for being the best part of my chaos. ❤️</p>
+        </div>
+    </div>
+
+    <div class="page" style="background: linear-gradient(to bottom, #fff, #ffebee);">
+        <div class="content">
+            <h1 style="font-family: 'Playfair Display'; font-size: 50px; color: #e91e63; margin:0;">2026</h1>
+            <h2>Happy Birthday Shweta! 🎂</h2>
+            <p class="quote">"Stay Manchala, Stay Happy!"</p>
+            <div style="font-size: 50px;">🍰🎁✨</div>
+            <p style="font-size: 10px; margin-top: 30px; color: #aaa;">Click the back cover to close</p>
+        </div>
+    </div>
 </div>
 
-<!-- Page 1 -->
-<div class="page p2">
-    <label for="page2"></label>
-    <h2>Our Story 😂</h2>
-    <img src="IMG-20260310-WA0121.jpg">
-    <p class="quote">
-        "From random talks to endless fights…  
-        we became something unforgettable."
-    </p>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    function toggleMusic() {
+        const music = document.getElementById('bgMusic');
+        const btnText = document.getElementById('music-text');
+        const btnIcon = document.getElementById('music-icon');
 
-<!-- Page 2 -->
-<div class="page p3">
-    <label for="page3"></label>
-    <h2>Tom & Jerry 🐱🐭</h2>
-    <img src="IMG-20260310-WA0136.jpg">
-    <p class="quote">
-        "We fight, we roast, we annoy…  
-        but we never leave."
-    </p>
-</div>
+        if (music.paused) {
+            music.play();
+            btnText.innerText = "Pause Music";
+            btnIcon.innerText = "⏸️";
+        } else {
+            music.pause();
+            btnText.innerText = "Play Manchala";
+            btnIcon.innerText = "🎵";
+        }
+    }
 
-<!-- Page 3 -->
-<div class="page p4">
-    <label for="page4"></label>
-    <h2>Why You’re Special 💖</h2>
-    <img src="IMG-20260311-WA0075.jpg">
-    <p class="quote">
-        "Cute, caring, understanding…  
-        and still a full-time Akduu Bandriya 😂"
-    </p>
-</div>
-
-<!-- Page 4 -->
-<div class="page p5">
-    <label for="page5"></label>
-    <h2>Things I Never Say 💌</h2>
-    <img src="Snapchat-1029023790.jpg">
-    <p class="quote">
-        "You’re not just my best friend…  
-        you’re my comfort person."
-    </p>
-</div>
-
-<!-- Final Page -->
-<div class="page">
-    <h2>Happy Birthday 🎂✨</h2>
-    <p class="quote">
-        "Stay the same chaos + happiness combo 💖  
-        Happy Birthday Shweta 😌🔥"
-    </p>
-</div>
-
-</div>
+    // Trigger Confetti on final page
+    document.getElementById('p6').addEventListener('change', function() {
+        if(this.checked) {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff3385', '#ffeb3b', '#4caf50']
+            });
+        }
+    });
+</script>
 
 </body>
 </html>
